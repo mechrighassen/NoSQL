@@ -1,0 +1,93 @@
+<html>
+  <head>
+     <title>Demo Form</title>
+     <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+      <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+  </head>
+  <body>
+
+    <div class="container"><br>
+      <center>
+        <h1>Protein Searcher</h1>
+      </center>
+    </div>
+
+    <div class=container"><br>
+    <div class="row align-items-center justify-content-center">
+    <div class="col-md-4">
+      <form  action="" method="post" role="form">
+        {{ form.csrf }}
+        <div class="form-group">
+          <label for="name">Entry Name:</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Entry Name?">
+
+
+
+	    <br>
+	  <label for="email">Protein Name:</label>
+	  <input type="text" class="form-control" id="email" name="email" placeholder="Protein Name">
+	    <br>
+<!--	  <label for="password">Password:</label>
+	  <input type="password" class="form-control" id="password" name="password" placeholder="Enter a password.">
+-->	</div>
+        <br>													   
+        <center>
+          <button type="submit" class="btn btn-success">Submit</button>
+        </center>
+      </form>
+      <br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+        {% for message in messages %}
+            {% if "Error" not in message[1]: %}
+                <div class="alert alert-info">
+                <strong>Success! </strong> {{ message[1] }}
+                </div>
+            {% endif %}
+            {% if "Error" in message[1]: %}
+                <div class="alert alert-danger">
+                <strong>Error: </strong> {{ message[1] }}
+                </div>
+            {% endif %}
+        {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <br>
+    <!--<h1>{{ title }}</h1>-->
+    <div>
+    <canvas id="chart" width="400" height="200"></canvas>
+    <script>
+      var pieData = [
+        {% for item, label, colors in set %}
+          {
+            value: {{item}},
+            label: "{{label}}",
+            color : "{{colors}}"
+          },
+        {% endfor %}
+      ];
+      // get bar chart canvas
+      var mychart = document.getElementById("chart").getContext("2d");
+      steps = 10
+      max = {{ max }}
+      // draw pie chart
+      new Chart(document.getElementById("chart").getContext("2d")).Pie(pieData);
+    </script>
+        </div>
+    <div class=page>
+  <h3>Results</h3>
+  {% for table in data %}
+    <!--<h2>{{titles[loop.index]}}</h2>-->
+    {{ table|safe }}
+  {% endfor %}
+</div>
+    </div>
+
+    </div>
+
+  </body>
+</html>
